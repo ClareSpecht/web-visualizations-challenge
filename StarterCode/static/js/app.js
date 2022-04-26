@@ -32,9 +32,45 @@ function demographic(j) {
   });
 };
 
+function bubbles(y) {
+  d3.json(url).then(function(data) {
+    let trace1 = {
+      x: data.samples[y].otu_ids,
+      y: data.samples[y].sample_values,
+      mode: 'markers',
+      marker: {
+        color: data.samples[y].otu_ids,
+        size: data.samples[y].sample_values
+      },
+      text: data.samples[y].otu_labels
+    };
+    Plotly.newPlot("bubble", [trace1]);
+  });
+};
+
+function gauge(z) {
+  d3.json(url).then(function(data) {
+    var data = [
+      {
+        gauge: {
+          axis: {range: [null, 9]}
+        },
+        value: data.metadata[z].wfreq,
+        title: { text: "Scrubs per Week" },
+        type: "indicator",
+        mode: "gauge+number"
+      }
+    ];
+    var layout = { width: 600, height: 500, margin: { t: 0, b: 0 } };
+    Plotly.newPlot('gauge', data, layout);
+  });
+};
+
 function init() {
   graph(0);
   demographic(0);
+  bubbles(0);
+  gauge(0);
   d3.json(url).then(function(data) {
     data.names.forEach(id => {
       d3.select("#selDataset")
@@ -53,6 +89,8 @@ function optionChanged(changed) {
       if (changed === data.samples[i].id) {
         graph(i);
         demographic(i);
+        bubbles(i);
+        gauge(i);
       };
     };
   });
