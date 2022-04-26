@@ -1,4 +1,4 @@
-const url = "/data/samples.json";
+const url = "web-visualizations-challenge/StarterCode/data/samples.json";
 
 function graph(x) {
   d3.json(url).then(function(data) {
